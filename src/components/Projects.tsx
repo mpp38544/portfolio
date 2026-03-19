@@ -31,7 +31,7 @@ const projects: Project[] = [
     },
     {
         title: 'Market-Making C++ Backtester and Orderbook Simulator',
-        description: 'High-frequency market making strategy implemented in C++ using the Avellaneda-Stoikov model. Simulates a full order book with bid-ask spread optimisation based on inventory risk and volatility. Includes a multithreaded backtesting engine with historical data stored in Parquet format.',
+        description: 'High-frequency market making strategy in C++ using the Avellaneda-Stoikov model. Simulates a full order book with dynamic spread optimisation. Multithreaded backtesting engine with historical data in Parquet format.',
         live: null,
         github: 'https://github.com/mpp38544/MMS',
         tech: ['C++', 'Pandas', 'Parquet', 'Multithreading'],
@@ -39,7 +39,7 @@ const projects: Project[] = [
     },
     {
         title: 'Integrated 3D Object Localisation and Tracking Pipeline',
-        description: 'Building a unified pipeline that converts 2D drone footage into precise 3D GPS coordinates for real-time object tracking. Uses YOLO, OpenCV and georeferencing to map detected bounding boxes into world coordinates for multi-object tracking.',
+        description: 'Unified pipeline converting 2D drone footage into precise 3D GPS coordinates for real-time object tracking using YOLO, OpenCV and georeferencing.',
         live: null,
         github: null,
         tech: ['Python', 'YOLO', 'OpenCV', 'PyTorch', 'React'],
@@ -47,7 +47,7 @@ const projects: Project[] = [
     },
     {
         title: 'Wearable Sleep Apnea Monitoring Device',
-        description: 'Wearable sleep apnea monitoring system using ESP32, PPG and flex sensors. Raw SpO2, heart rate and breathing data is streamed to the cloud, processed and classified using a Random Forest model trained on PSG datasets. Outputs an AHI score and sleep quality dashboard.',
+        description: 'Wearable monitoring system using ESP32, PPG and flex sensors. Streams SpO2, heart rate and breathing data to the cloud, classified using a Random Forest model. Outputs AHI score and sleep quality dashboard.',
         live: null,
         github: null,
         tech: ['Python', 'Firebase', 'scikit-learn', 'React', 'FastAPI'],
@@ -61,7 +61,19 @@ export default function Projects() {
             <p className="text-xs text-[#555] uppercase tracking-widest mb-6">Projects</p>
             <div className="flex flex-col gap-4">
                 {projects.map((project) => (
-                    <div key={project.title} className="bg-[#161616] border border-[#2a2a2a] rounded-xl overflow-hidden hover:border-[#444] transition-colors">
+                    <div
+                        key={project.title}
+                        onClick={() => {
+                                const url = project.live ?? project.github
+                                if (url) {
+                                    const a = document.createElement('a')
+                                    a.href = url
+                                    a.target = '_blank'
+                                    a.rel = 'noopener noreferrer'
+                                    a.click()
+                                }
+                            }}
+                        className={`bg-[#161616] border border-[#2a2a2a] rounded-xl overflow-hidden hover:border-[#444] transition-colors ${project.live || project.github ? 'cursor-pointer' : ''}`}>
                         {project.image && (
                             <img src={project.image} alt={project.title} className="w-full h-48 object-cover object-top" />
                         )}
@@ -73,17 +85,25 @@ export default function Projects() {
                                 )}
                             </div>
                             <p className="text-[#888] text-sm leading-relaxed mb-4">{project.description}</p>
-                            <div className="flex flex-wrap gap-2 mb-4">
+                            <div className="flex flex-wrap gap-2 mb-3">
                                 {project.tech.map(t => (
                                     <span key={t} className="text-xs bg-[#1e1e1e] border border-[#333] text-[#aaa] px-2 py-1 rounded-full">{t}</span>
                                 ))}
                             </div>
                             <div className="flex gap-4">
                                 {project.live && (
-                                    <a href={project.live} target="_blank" rel="noopener noreferrer" className="text-xs text-[#6b9fff] hover:text-[#99bbff] transition-colors">Live →</a>
+                                    <span className="text-xs text-[#6b9fff]">Live →</span>
                                 )}
                                 {project.github && (
-                                    <a href={project.github} target="_blank" rel="noopener noreferrer" className="text-xs text-[#888] hover:text-[#aaa] transition-colors">GitHub →</a>
+                                    
+                                    <a href={project.github}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="text-xs text-[#888] hover:text-[#aaa] transition-colors"
+                                    >
+                                        GitHub →
+                                    </a>
                                 )}
                                 {!project.live && !project.github && (
                                     <span className="text-xs text-[#555]">Coming soon</span>
